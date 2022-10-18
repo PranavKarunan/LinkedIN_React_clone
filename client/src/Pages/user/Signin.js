@@ -16,7 +16,7 @@ const validate = (values) => {
   let errors = {};
 
   if (!values.userName) {
-    errors.userName = "User Name number is required";
+    errors.userName = "User Name is required";
   }
 
   if (!values.password) {
@@ -39,8 +39,9 @@ function Signin() {
       });
 
       console.log(data);
-      navigate("/userHome");
+      navigate("/");
       localStorage.setItem("user", JSON.stringify(data));
+
       dispatch({ type: "LOGIN", payload: data });
       setError("")
       

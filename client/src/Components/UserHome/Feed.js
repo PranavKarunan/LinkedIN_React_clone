@@ -1,5 +1,5 @@
 import { Avatar } from '@material-ui/core'
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useLayoutEffect, useState } from 'react'
 import PhotoIcon from '@material-ui/icons/Photo'
 import YoutubeIcon from '@material-ui/icons/YouTube'
 import TodayIcon from '@material-ui/icons/Today'
@@ -12,18 +12,23 @@ function Feed() {
     const [posts,setPost] = useState([])
     const user = JSON.parse(localStorage.getItem("user"))
     const [message,setMessage] =useState('')
-    const submitPost = (e) =>{
+    const [newPost,setNewPost] = useState(false)
+    const submitPost = async(e) =>{
         e.preventDefault();
         
-        const {data} = axios.post('http://localhost:8800/createPost',{message,user})
-        setPost([...posts,message])
+        const {data} = await axios.post('http://localhost:8800/createPost',{message,user})
+        console.log(data)
+        console.log(posts)
+        setPost([...posts,data])
+        setNewPost((prev)=>!prev)
         setMessage('')
     }
     
-    useEffect(()=>{
+    useLayoutEffect(()=>{
         async function fetchData() {
             axios.get('http://localhost:8800/posts').then((res)=>{
                 setPost(res.data)
+
                 
             })
             
@@ -33,7 +38,7 @@ function Feed() {
         
         
       
-    },[posts])
+    },[newPost])
   return (
     <div className='feed'>
         <div className='feed__input'>
@@ -48,7 +53,7 @@ function Feed() {
             </div>
 
             <div className='feed__options'>
-                <div className='option'>
+                <div className='option' style ={{display:'flex',alignItems:'center'}}>
                     <PhotoIcon style ={{color:'#70b5f9'}}/>
                     <span>Photo</span>
                 </div>

@@ -4,6 +4,7 @@ import { Link, useNavigate } from "react-router-dom";
 import "../../Style/style.scss";
 import { useDispatch } from "react-redux";
 import { Button } from "@mui/material";
+import { useState } from "react";
 
 const initialValues = {
   name: "",
@@ -46,15 +47,20 @@ const validate = (values) => {
 };
 
 function Signup() {
+  const [error,setError] = useState('')
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const onSubmit = (values) => {
-    axios.post(`http://localhost:8800/register`, { values }).then((res) => {
-      console.log(res);
+  const onSubmit = async (values) => {
+ 
+    try {
+      const { data } = await axios.post(`http://localhost:8800/register`, { values })
       navigate("/otpVerify");
-      localStorage.setItem("user", JSON.stringify(res.data.user));
-      dispatch({ type: "LOGIN", payload: res.data.user });
-    });
+      localStorage.setItem("user", JSON.stringify(data));
+      dispatch({ type: "LOGIN", payload: data });
+      setError('')
+    } catch (error) {
+      setError(error.response.data.message)
+    }
   };
   const formik = useFormik({
     initialValues,
@@ -140,7 +146,11 @@ function Signup() {
         <Button type="submit" variant="contained">
           Agree & Join
         </Button>
-
+            {
+              error && <div className="error">
+                {error}
+              </div>
+            }
         <h4>
           Already on LinkedIn?{" "}
           <span>

@@ -10,15 +10,16 @@ import { Avatar, Button } from '@material-ui/core'
 
 import HeaderOptions from './HeaderOptions'
 import { useNavigate } from 'react-router-dom';
-
+import { useDispatch } from 'react-redux';
 
 
 function Header() {
+  const dispatch = useDispatch()
   const navigate = useNavigate()
   const handleLogout =() =>{
-    alert('logout')
     localStorage.removeItem("user")
-    navigate('/')
+    dispatch({ type: "LOGOUT", payload: null });
+   
   }
   return (
     <div className='header'>

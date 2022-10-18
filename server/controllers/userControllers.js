@@ -19,13 +19,19 @@ const userRegister = async (req, res) => {
       if (moblen == 10) {
         let user = await User.findOne({ mobileNumber: mobile });
 
-        if (user && userNameExist) {
+       
+
+        if (user) {
           console.log("user is already exist");
           return res
             .status(400)
             .json({ message: "mobile already exists please try other" });
         } else {
           console.log("req.body is in backend");
+          const userNameExist = await User.findOne({ userName : userName})
+          if(userNameExist){
+            return res.status(400).json({message:"user name already exist please try other"})
+          }
           let otp = dosms(mobile);
 
           if (!otp.valid) {

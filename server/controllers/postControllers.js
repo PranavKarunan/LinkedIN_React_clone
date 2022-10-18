@@ -9,20 +9,22 @@ const newPost = async (req, res) => {
     return res.status(500).json("Please type something..!");
   }
   const userData = await User.findOne({ userName: user.userName });
+  console.log(userData._id)
 
   try {
     if (userData) {
-      let newPost = new Post({
+      let newPost =await new Post({
         user_id: userData._id,
         message: message,
       }).save();
       console.log("first");
-      res.status(201).json(newPost);
+      console.log(newPost)
+      res.json(newPost);
     }
   } catch (error) {
-    console.log("---------------------------------------------------");
+    
     console.log(error.message);
-    console.log("---------------------------------------------------");
+  
 
     res.status(500).json({ message: error.message });
   }
@@ -30,6 +32,35 @@ const newPost = async (req, res) => {
 
 const getAllPosts = async (req, res) => {
   const post = await Post.find().sort({ date: -1 });
+  // const post = await Post.aggregate([
+  // {
+  //   $project:{
+  //     "user_id":1,
+  //     "message":1,
+  //     "createdAt":1
+  //   },
+    
+  //     $lookup:{
+  //       from: 'users',
+  //       localField: 'user_id',
+  //       foreignField: '_id',
+  //       as: "result"
+  //     },
+      
+  //     $unwind:{
+  //       path:"$result"
+  //     },
+  //     $project:{
+  //       "_id":1,
+  //       "message":1,
+  //       "createdAt":1,
+  //       "result.name":1
+  //     }
+    
+  // }
+  // ])
+  // console.log(post)
+  
   res.status(200).json(post);
 };
 

@@ -6,6 +6,7 @@ import Otp from "../Pages/user/Otp";
 
 
 import React from "react";
+import { LoggedIn, NotLoggedIn } from "../auth/authUser";
 const user = JSON.parse(localStorage.getItem("user"))
 console.log(user)
 function UserRouter() {
@@ -13,10 +14,16 @@ function UserRouter() {
   return (
     <>
       <Routes>
-        <Route exact path="/" element={<Signin />} />
+        
+        <Route element = {<LoggedIn />}>
+        <Route path="/" element={<UserHome />} />
+        </Route>
+        <Route element = {<NotLoggedIn />}>
+        <Route exact path="/signin" element={<Signin />} />
+        </Route>
         <Route path="/register" element={<Signup />} />
         <Route path="/otpVerify" element={<Otp />} />
-        <Route path="/userHome" element={<UserHome />} />
+       
       </Routes>
     </>
   );
